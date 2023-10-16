@@ -17,27 +17,29 @@ namespace Codebridge.Presentation.Controllers
     [ApiController]
     [Route("")]
     [EnableRateLimiting("fixedWindow")]
-    public class DogController :ControllerBase
+    public class DogController:ControllerBase
     {
         private readonly ILogger<DogController> _logger;
         private readonly IMediator _mediator;
 
-        public DogController(ILogger<DogController> logger, IMediator mediator)
+        public DogController(ILogger<DogController> logger,IMediator mediator)
         {
             _logger = logger;
             _mediator = mediator;
         }
 
 
+
+
         [HttpGet]
         [Route("/ping")]
-        public  IActionResult Ping()
+        public IActionResult Ping()
         {
             var assembly = Assembly.GetExecutingAssembly();
             var title = assembly.GetCustomAttribute<AssemblyTitleAttribute>()?.Title;
             var version = assembly.GetName().Version?.ToString();
 
-            return  Ok($"Product:{title}.Version{version}");
+            return Ok($"Product:{title}.Version{version}");
         }
 
 
@@ -48,26 +50,26 @@ namespace Codebridge.Presentation.Controllers
             return await _mediator.Send(new GetAllDogsQuery());
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("/dog/{id}")]
         public async Task<ActionResult<Result<DogDto>>> GetDogsById(Guid id)
         {
             return await _mediator.Send(new GetDogByIdQuery(id));
         }
 
         [HttpGet]
-        [Route("weight/")]
+        [Route("/dogs/weight/")]
         public async Task<ActionResult<Result<List<DogDto>>>> GetDogsByWeightQuery()
         {
             return await _mediator.Send(new GetAllDogsByWeightQuery());
         }
 
         [HttpGet]
-        [Route("paged")]
+        [Route("/dogs/paged")]
         public async Task<ActionResult<PaginatedResult<DogDto>>> GetDogsWithPagination([FromQuery] GetDogsWithPaginationQuery query)
         {
             var validator = new GetDogsWithPaginationValidator();
 
-            
+
             var result = validator.Validate(query);
 
             if(result.IsValid)
@@ -79,7 +81,7 @@ namespace Codebridge.Presentation.Controllers
             return BadRequest(errorMessages);
         }
 
-        [HttpPost]
+        [HttpPost("/dog/create")]
         public async Task<ActionResult<Result<Guid>>> Create(CreateDogCommnd command)
         {
             if(!ModelState.IsValid)
@@ -88,7 +90,7 @@ namespace Codebridge.Presentation.Controllers
             return await _mediator.Send(command);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("/dog/edit/{id}")]
         public async Task<ActionResult<Result<Guid>>> Update(Guid id,UpdateDogCommand command)
         {
             if(id != command.Id)
@@ -99,11 +101,11 @@ namespace Codebridge.Presentation.Controllers
             return await _mediator.Send(command);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("/dog/delete/{id}")]
         public async Task<ActionResult<Result<Guid>>> Delete(Guid id)
         {
             if(!ModelState.IsValid)
-                return  BadRequest("You enter invalid value");
+                return BadRequest("You enter invalid value");
 
             return await _mediator.Send(new DeleteDogCommand(id));
         }

@@ -5,21 +5,11 @@ using Codebridge.Application.CQRS.Dogs.Commands.UpdateDog;
 using Codebridge.Application.CQRS.Dogs.Queries.GetAllDogs;
 using Codebridge.Application.DTOs;
 using Codebridge.Application.Interfaces.Repository;
+using Codebridge.Application.Mappings;
 using Codebridge.Domain.Entities;
-using Codebridge.Domain.Exceptions;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
-using Codebridge.Application.Extensions;
-using Microsoft.EntityFrameworkCore;
-using Codebridge.Persistant.Repository;
-using Codebridge.Persistant.Data.Contexts;
-using Microsoft.Extensions.Caching.Memory;
+
 
 namespace Codebridge.UnitTests
 {
@@ -31,6 +21,7 @@ namespace Codebridge.UnitTests
 
         public CQRSTests()
         {
+
             _unitOfWorkMock = new Mock<IUnitOfWork>();
             _mapperMock = new Mock<IMapper>();
            _repositoryMock = new Mock<IGenericRepository<Dog>>();

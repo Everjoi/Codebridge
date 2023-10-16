@@ -13,6 +13,8 @@ namespace Codebridge.Application.CQRS.Dogs.Queries.GetDogsWithPagination
     {
         public int PageNumber { get; set; }
         public int PageSize { get; set; }
+        public string Argument { get; set; } = "weight";
+        public string Order { get; set; } = string.Empty;
 
         public GetDogsWithPaginationQuery() { }
 

@@ -3,11 +3,7 @@ using Codebridge.Domain.Common;
 using Codebridge.Domain.Exceptions;
 using Codebridge.Persistant.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Codebridge.Persistant.Repository
 {

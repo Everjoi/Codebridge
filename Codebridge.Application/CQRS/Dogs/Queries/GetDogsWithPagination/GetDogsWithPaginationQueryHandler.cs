@@ -28,10 +28,28 @@ namespace Codebridge.Application.CQRS.Dogs.Queries.GetDogsWithPagination
 
         public async Task<PaginatedResult<DogDto>> Handle(GetDogsWithPaginationQuery query,CancellationToken cancellationToken)
         {
-            return await _unitOfWork.Repository<Dog>().Entities
+            if(query.Argument == "weight" && query.Order =="desc")
+            {
+                return await _unitOfWork.Repository<Dog>().Entities
+                   .OrderByDescending(x => x.Weight)
+                   .ProjectTo<DogDto>(_mapper.ConfigurationProvider)
+                   .ToPaginatedListAsync(query.PageNumber,query.PageSize,cancellationToken);
+            }
+            else if(query.Argument == "name" && query.Order == "desc")
+            {
+                return await _unitOfWork.Repository<Dog>().Entities
+                   .OrderByDescending(x => x.Name)
+                   .ProjectTo<DogDto>(_mapper.ConfigurationProvider)
+                   .ToPaginatedListAsync(query.PageNumber,query.PageSize,cancellationToken);
+            }
+            else
+            {
+                return await _unitOfWork.Repository<Dog>().Entities
                    .OrderBy(x => x.Name)
                    .ProjectTo<DogDto>(_mapper.ConfigurationProvider)
                    .ToPaginatedListAsync(query.PageNumber,query.PageSize,cancellationToken);
+            }
+            
         }
 
     }

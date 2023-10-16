@@ -19,6 +19,13 @@ namespace Codebridge.Persistant.Data.Contexts
         private readonly string _connectionString;
         private readonly IHostEnvironment _environment;
 
+
+        public CodebridgeContext(DbContextOptions<CodebridgeContext> options)
+            :base(options)
+        {
+                
+        }
+
         public CodebridgeContext(DbContextOptions<CodebridgeContext> options,IConfiguration configuration,IHostEnvironment environment)
             : base(options)
         {
@@ -36,10 +43,7 @@ namespace Codebridge.Persistant.Data.Contexts
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
              base.OnModelCreating(modelBuilder);
-            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-
-
-           
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly()); 
         }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())

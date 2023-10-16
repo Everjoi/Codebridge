@@ -6,12 +6,7 @@ using Codebridge.Domain.Entities;
 using Codebridge.Shared;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Codebridge.Application.CQRS.Dogs.Queries.GetAllDogs
 {
@@ -28,6 +23,8 @@ namespace Codebridge.Application.CQRS.Dogs.Queries.GetAllDogs
 
         public async Task<Result<List<DogDto>>> Handle(GetAllDogsQuery query,CancellationToken cancellationToken)
         {
+            var a =  _unitOfWork.Repository<Dog>().Entities;
+            var b = a.ProjectTo<DogDto>(_mapper.ConfigurationProvider);
 
             var dogs = await _unitOfWork.Repository<Dog>().Entities
                    .ProjectTo<DogDto>(_mapper.ConfigurationProvider)

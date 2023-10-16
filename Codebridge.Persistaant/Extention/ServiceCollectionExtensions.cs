@@ -30,9 +30,17 @@ namespace Codebridge.Persistant.Extention
         {
             var connectionString = configuration.GetConnectionString("DefaultConnection");
 
+
             services.AddDbContext<CodebridgeContext>(options =>
                options.UseSqlServer(connectionString,
                    builder => builder.MigrationsAssembly(typeof(CodebridgeContext).Assembly.FullName)));
+
+
+            // For Integrated Test
+            //services.AddDbContext<CodebridgeContext>(options =>
+            //   options.UseInMemoryDatabase("TestDatabase"));
+
+
         }
 
 

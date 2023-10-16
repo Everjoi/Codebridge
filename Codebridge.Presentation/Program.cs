@@ -1,20 +1,15 @@
-using Autofac.Extensions.DependencyInjection;
-using Autofac;
 using Codebridge.Application.Extensions;
 using Codebridge.Persistant.Data.Contexts;
 using Codebridge.Persistant.Extention;
-using Microsoft.EntityFrameworkCore;
-using System.Runtime.CompilerServices;
-using Codebridge.Persistant.ModuleContainer;
 using AspNetCoreRateLimit;
-using Autofac.Core;
-using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.RateLimiting;
 using Codebridge.Application.Mappings;
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
-
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -39,9 +34,6 @@ builder.Services.AddRateLimiter(options=>
     }).RejectionStatusCode = 429;
 
 });
-
-
-
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1",new OpenApiInfo
@@ -50,13 +42,13 @@ builder.Services.AddSwaggerGen(c =>
         Version = "v1"
     });
 });
+builder.Services.AddHealthChecks()
+        .AddDbContextCheck<CodebridgeContext>();
 
 
 
 
 var app = builder.Build();
-
-
 if(app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -69,4 +61,15 @@ app.UseRateLimiter();
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
+app.UseRouting();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapHealthChecks("/health",new HealthCheckOptions
+    {
+        Predicate = _ => true,
+        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse,
+        AllowCachingResponses = false,
+    })
+    ;
+});
 app.Run();
